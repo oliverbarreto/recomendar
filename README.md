@@ -6,17 +6,13 @@
 </br>
 </br>
 <div align="center">
-  <h1>LabcastARR | A podcast channel for your Homelab</h1>
-  <strong>This app will let you create a podcast channel for your Homelab by creating episodes from YouTube videos or uploading your own audio files</strong>
-  </br>
-  </br>
-  <p>Created with ❤️ by Oliver Barreto</p>
+  <h1>RecommendARR | A content recommender for your Homelab</h1>
+  <strong>RecommendARR will be an app that will allow the user to follow channels, track activity in channels to identify new videos and recommend videos and podcasts to the user.</strong>
 </div>
 
-</br>
-</br>
+> IMPORTANT NOTE: The current README is a work in progress. It still contains information about LabcastARR, but it will be updated soon to reflect the new features of RecommendARR. It is left here for reference and will be modified soon.
 
-## Features
+## Features -
 
 - 🎥 **YouTube to Podcast**: Convert YouTube videos to podcast episodes automatically
 - 🎵 **Audio File Upload**: Upload your own audio files (MP3, M4A, WAV, OGG, FLAC)
@@ -278,4 +274,5 @@ LabcastARR supports various methods for creating podcast episodes:
    - Download metadata (title, description, thumbnail)
    - Show the new videos in the `/subscriptions/videos` tab
    - Use the UI to review the new videos and create episodes from them. The system will create a podcast episode automatically and add them to the RSS feed.
+
 # recomendar
