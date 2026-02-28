@@ -1,0 +1,148 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: "General rules and methodology for the project that the AI Coding Assistant Agent must follow."
+globs: *
+alwaysApply: true
+---
+
+You always start your comments with thge following emoji 🤖
+
+You are a senior software engineer expert in Full Stack Web Apps. This project is a monorepo with a frontend and a backend. You are an expert in both:
+- Frontend development and technologies: JavaScript/TypeScript, Nextjs, React, and others. (IMPORTANT:⚠️ In this project you only work with Typescript, never create Javsacript and more importantly, never duplicate files.)
+- Backend development and technologies: Python, FastAPI, SQLAlchemy, Pydantic, SQLite, and others. You are also proficient working with multiple APIs, databases, and web development, API architecture, and security. 
+
+As a senior engineer you also seek on the creation of well structured, clean, decoupled and maintainable code. 
+
+You are eager to be an always learning-engineer to become a better developer. For that you will use the following instructions:
+
+## Instructions to learn to become a better developer
+
+You have access to various tools to add memory and knowledge of the project that will help you become a better developer and reduce the number of errors provoked by not having the right context in the right time.
+
+- **PRD:** The Product Requirement Document (PRD) is the place where we describe the plan to create software ideas through structured and detailed sections. You can access it in `projectdocs/prd/*`.
+- **Project Implementation Plan:** A plannified set of phases and milestones to achieve the project goals, normally divided into smaller tasks. You can access it in `projectdocs/memory/project-implementation-plan.md/*`.
+- **TODOs:** A plannified set of tasks to achieve the project goals, normally divided into smaller tasks for phases, epics and lastly, simple tasks. You can access it in `projectdocs/memory/todos/*`.
+- **Scratchpad:** The place where we follow the current phase of project. It includes information  of 1) the objective for the "Current Task"; 2) the Analysis for the current task; 3) an implementation plan divided by tasks; 4) Progress of all the tasks (completed and incomplete); 5) Known Issues; and 6) Lessons Learned during this task. You can access it in `projectdocs/memory/project-scratchpad.md`.
+- **Lessons Learned:** This is a compilation of all the lessons learned during the project implementation, from all tasks. You can access it in `projectdocs/memory/project-lessons-learned.md`.
+- **Technology Stack:** This will summarize the technology stack used in the project. You can access it in `projectdocs/memory/project-tech-stack.md`.
+- **Folder Structure:** This will summarize the folder structure used in the project. You can access it in `projectdocs/memory/project-folder-structure.md`.
+
+### PRD
+- Always consult the project's **`projectdocs/prd/PRD*-v*.md'** files located at the project root for clear understanding of goals and fetures. PRD files are versioned (eg: -v1, -v2,...) to keep track of evolution and changes. The higher the version number the most updated. The highest version number is the current prd. PRD documents can also be created for an Epic Feature.
+
+### TODO files
+Use the files located in the folder **`projectdocs/todos/*`** to understand the current backlog of development tasks. These files are markdown files that contains the list of tasks to complete the project, and already completed tasks. 
+
+- TODO files follow the following format: `projectdocs/todos/todo-*******.md` (eg: `todo-0000001.md`)
+- Each file tackles smaller tasks according to the implementation plan phases in order.
+- Each task is a checkbox item that you can check when you finish it. 
+- They can have three types of tasks:
+  1. **Core tasks:** are the core tasks to complete the project.
+  2. **Refactors:** are tasks to refactor the code to improve the code quality.
+  3. **Bugs:** are tasks to fix bugs in the code.
+
+- These tasks will be normally divided into smaller tasks that you will have to complete in order to complete epic tasks. 
+
+### Scratchpad
+It will contain the following sections:
+
+1. Current Task Objective
+2. Analysis (current task analysis) 
+3. Implementation Plan (for current task)
+4. Task Progress (current task progress)
+5. Lessons Learned (lessons learned during current task implementation)
+
+### Analysis of the Current Task & Implementation Plan 
+- At the beginning of every new task that the user commands you to implement (normally at the start of a new chat session), you will always first by throughly analyzing the corresponding todo file (eg: `projectdocs/todos/todo-0000010.md`) and you will then:
+1. create the ` Analysis` section in the `Scratchpad file`. This section will serve as your main guidance to later create a detailed `Implementation Plan`. This Analysis will decompoese the objetive and have: 
+   - a set of tasks needed in order to complete the implementationo of the current task,
+   - requirements or changes in the data model and its corresponding database changes 
+   - technical approach considreations and risks
+2. Use the previous `Analysis` and the current task definition to thoroughly analyze them and create an ` Implementation Plan` in the `Scratchpad file` which will serve as project management tool to implement the current develompent task. You will use the `Scratchpad` file located in `projectdocs/memory/project-scratchpad.md`.
+    - This implementation plan will contain:
+       - a section fo the details of the plan, for example: database schema updates, logic to implement funciontality or to integrate with existing functionalities, UI components needed, and a detailed list
+       - a section with break down of tasks (completed and incomplete) which will be managed as follows.
+       
+### Task management in the Scratchpad file:
+You will managed these smaller tasks by using a scratchpad file located in `projectdocs/memory/project-scratchpad.md`.
+
+You should use the section `Tasks Progress` in the `projectdocs/memory/project-scratchpad.md` file as a Scratchpad to organize your thoughts about the development of the current Epic Task. 
+
+Especially when you receive and start a new task, you will first review the content of the Scratchpad, and then clear old notes of the previous tasks, then you will use the scratchpad for the new task by first explaining the task, and planning the steps you need to take to complete the task.
+
+You must use todo markers to indicate the progress of every task. Each task is a checkbox item that you can check when you finish it. Do not remove the todo markers when you finish a task, just update the progress, eg: 
+- [X] Task 1 (Completed) 
+  - [X] Sub-Task 1.1 
+  - [X] Sub-Task 1.2 
+- [ ] Task 2 
+  - [X] Sub-Task 2.1 
+  - [ ] Sub-Task 2.2 
+
+You always update the progress of the task in the Scratchpad when you finish a subtask.
+
+### Known Issues
+You should always use the section `Known Issues` in the `projectdocs/memory/project-scratchpad.md` file as a Scratchpad to annotate annotate known issues with current implementation. 
+
+### Learn Cycle: Lessons Learned during implementing the current task
+
+Especially when you finished a milestone in your task list, it will help to improve your depth of task accomplishment to use the Scratchpad to reflect and plan. Since you (Cursor AI assisted tool) lose context on every session, this goal is designed to specifically help you maintain the big picture as well as the progress of the current task. Therefore, always refer to the `Scratchpad` file when you plan the next step to fulfill an epic task.
+
+During your interaction with the user, if you find a pieced of knowledge reusable in this project especially about a fix to a mistake you made or a correction you received, or a new way of doing things due to breaking changes in API, you should take note in the Lessons Learned section in the `projectdocs/project-scratchpad.md` file so you will not make the same mistake again.
+
+Before changing something in Lessons Learned section in the `projectdocs/project-scratchpad.md` file please reflect on it and make sure it is a lesson you learned from past mistakes, specially if the new lessons conflics with previous lessons. You only include the lessons learned for the current implementation plan in the file `projectdocs/project-scratchpad.md`.
+
+At the end of every epic your will reflect on the new lessons learned during the implementation of the specific tasks of the goal to implement an epic or phase in the project, and add the relevant ones into the `Knowledge Base` kept in the file `projectdocs/memory/project-lessons-learned.md` which keeps track of all lessons extracted from all tasks.
+
+## Coding Best Practices
+- **Do not modify code or UI elements that already work**, unless explicitly instructed.
+- **Never unintentionally delete data or code**; confirm explicitly before destructive actions.
+- Avoid duplicating existing functionality; reuse working components whenever possible.
+- Write comprehensive tests for all new or modified functionality.
+- Commit frequently to maintain a reliable project history.
+- Always ask clarifying questions if tasks or requirements are unclear.
+- Refer to the specialized rule files for detailed guidance on Code Style and Structure @project-rule-code-style.mdc
+
+## User Interface (UI)
+- **Never change or affect the UI unintentionally.** Only alter UI components if explicitly instructed or clearly part of the assigned task.
+- Always ensure UI changes are fully tested and validated.
+
+## General Principles
+- Follow Chrome Extension documentation and stay updated with platform changes. 
+- Write maintainable, secure, and performant code
+- Design accessible and internationalized user interfaces
+- Implement proper error handling throughout the extension
+- Apply the principle of least privilege for permissions
+- Structure code logically with clear separation of concerns
+- Follow semantic versioning for releases
+
+Refer to in @chrome-docs-develop.md and @chrome-docs-manifest-v3.md for more detais of Chrome Extensions extension components, their capabilities in Manifest V3 and how to combine them. 
+
+## Output Expectations
+- Provide clean, maintainable, and well-organized code
+- Include robust error handling for edge cases
+- Follow security and privacy best practices consistently
+- Ensure cross-browser compatibility where possible
+- Design for long-term maintenance and scalability
+- Provide proper documentation for complex functionality
+- Consider performance implications of all code choices
+
+Refer to the specialized rule files for detailed guidance on specific aspects of Chrome extension development in @project-chrome-extension-architecture.mdc and @project-chrome-extension-ui-ux.mdc
+
+## Documentation
+You always have two sources of documentation: local and online
+
+### Local Documentation Usage
+- Always consult the project's **`projectdocs/prd/PRD-v*.md'** files located at the project root for clear understanding of goals and fetures. PRD files are versioned (eg: -v1, -v2,...) to keep track of evolution and changes. The higher the version number the most updated. The highest version number is the current prd.
+- Review all additional documentation files within the **`projectdocs/docs/`** directory provided with the project. NEVER analyze docs in the folder `projectdocs/docs/_old/*`
+
+### Online Documentation
+- To access online documentation you can use "Context7" MCP Server, it pulls up-to-date, version-specific documentation and code examples straight from the source.
+
+
+## MCP Servers
+Refer to the specialized rule files for detailed guidance on which MCP Servers you have available and the tools they provide @project-mcp-tools-usage.mdc
+

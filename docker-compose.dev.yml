@@ -1,0 +1,183 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - labcastarr-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.development
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr-dev.db}
+      - API_KEY_SECRET=${API_KEY_SECRET:-dev-secret-key-change-in-production}
+      - MEDIA_PATH=${MEDIA_PATH:-./media}
+      - FEEDS_PATH=${FEEDS_PATH:-./feeds}
+      - CORS_ORIGINS=${CORS_ORIGINS:-["http://localhost:3000"]}
+      - BACKEND_URL=${BACKEND_URL:-http://localhost:8000}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      # Logging configuration for development
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+      - LOG_FILE_PATH=${LOG_FILE_PATH:-./logs/labcastarr.log}
+      - ENABLE_FILE_LOGGING=${ENABLE_FILE_LOGGING:-false}
+      - ENABLE_REQUEST_LOGGING=${ENABLE_REQUEST_LOGGING:-true}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      # UV configuration for development - suppress hardlink warning on macOS Docker Desktop
+      - UV_LINK_MODE=copy
+    volumes:
+      - ./backend:/app:cached
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+      - /app/.venv
+    command:
+      [
+        "uv",
+        "run",
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload",
+      ]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - labcastarr-network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  celery-worker-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env.development
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr-dev.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+    volumes:
+      - ./backend:/app:cached
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+      - /app/.venv
+    command:
+      [
+        "uv",
+        "run",
+        "celery",
+        "-A",
+        "app.infrastructure.celery_app",
+        "worker",
+        "--loglevel=info",
+        "--concurrency=2",
+      ]
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend-dev:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+  celery-beat-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env.development
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr-dev.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - LOG_LEVEL=${LOG_LEVEL:-DEBUG}
+    volumes:
+      - ./backend:/app:cached
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+      - /app/.venv
+    command:
+      [
+        "uv",
+        "run",
+        "celery",
+        "-A",
+        "app.infrastructure.celery_app",
+        "beat",
+        "--loglevel=info",
+      ]
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend-dev:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.development
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      # Development - Lenient defaults for quick start
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY:-dev-secret-key-change-in-production}
+      - NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN:-localhost:3000}
+    volumes:
+      - ./frontend:/app:cached
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      backend-dev:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+networks:
+  labcastarr-network:
+    driver: bridge
+
+volumes:
+  labcastarr_data:
+    driver: local
+  labcastarr_media:
+    driver: local
+  labcastarr_feeds:
+    driver: local
+  labcastarr_logs:
+    driver: local
+  redis_data:
+    driver: local

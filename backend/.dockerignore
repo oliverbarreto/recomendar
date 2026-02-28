@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+data/
+media/
+feeds/
+logs/
+*.db
+*.log
+celerybeat-schedule.db
+
+# Git
+.git/
+.gitignore
+
+# Environment files (will be provided via docker-compose)
+.env
+.env.*
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Scripts (optional - keep if needed)
+# scripts/
+
+
+
+
+
+
+
+

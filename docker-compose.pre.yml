@@ -1,0 +1,166 @@
+services:
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - labcastarr-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend-pre:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.pre
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - API_KEY_SECRET=${API_KEY_SECRET}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - BASE_URL=${BASE_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr.db}
+      - MEDIA_PATH=${MEDIA_PATH:-./media}
+      - FEEDS_PATH=${FEEDS_PATH:-./feeds}
+      - DOMAIN=${DOMAIN}
+      - BACKEND_URL=${BACKEND_URL}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FILE_PATH=${LOG_FILE_PATH:-./logs/labcastarr.log}
+      - ENABLE_FILE_LOGGING=${ENABLE_FILE_LOGGING:-true}
+      - ENABLE_REQUEST_LOGGING=${ENABLE_REQUEST_LOGGING:-true}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - labcastarr-network
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  celery-worker-pre:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env.pre
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+    command:
+      [
+        "uv",
+        "run",
+        "celery",
+        "-A",
+        "app.infrastructure.celery_app",
+        "worker",
+        "--loglevel=info",
+        "--concurrency=4",
+      ]
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend-pre:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+  celery-beat-pre:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env.pre
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/labcastarr.db}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/media:/app/media
+      - ./backend/feeds:/app/feeds
+      - ./backend/logs:/app/logs
+    command:
+      [
+        "uv",
+        "run",
+        "celery",
+        "-A",
+        "app.infrastructure.celery_app",
+        "beat",
+        "--loglevel=info",
+      ]
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend-pre:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+  frontend-pre:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY}
+        - NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN}
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.pre
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY}
+      - NEXT_PUBLIC_DOMAIN=${NEXT_PUBLIC_DOMAIN}
+    restart: unless-stopped
+    depends_on:
+      backend-pre:
+        condition: service_healthy
+    networks:
+      - labcastarr-network
+
+networks:
+  labcastarr-network:
+    driver: bridge
+
+volumes:
+  labcastarr_data:
+    driver: local
+  labcastarr_media:
+    driver: local
+  labcastarr_feeds:
+    driver: local
+  labcastarr_logs:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,0 +1,128 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(cd:*)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)",
+      "Bash(timeout:*)",
+      "Bash(true)",
+      "Bash(grep:*)",
+      "Bash(curl:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__fetch__fetch",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(node:*)",
+      "Bash(npm install)",
+      "Bash(npx tsc:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(npm cache clean:*)",
+      "WebSearch",
+      "Bash(uv sync:*)",
+      "Bash(uv run alembic:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npm install:*)",
+      "Bash(docker compose:*)",
+      "Bash(docker exec:*)",
+      "Bash(docker logs:*)",
+      "Bash(sqlite3:*)",
+      "Read(//Users/oliver/Library/**)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker-compose:*)",
+      "Bash(uv run:*)",
+      "Bash(curl -s http://127.0.0.1:8000)",
+      "WebFetch(domain:podgen.readthedocs.io)",
+      "Bash(python test:*)",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Request $i:\")",
+      "Bash(done)",
+      "Bash(python3:*)",
+      "Bash(uv add:*)",
+      "Bash(xargs kill:*)",
+      "Bash(awk:*)",
+      "Read(//private/tmp/**)",
+      "Bash(npm run lint:*)",
+      "Bash(npx eslint:*)",
+      "Bash(python:*)",
+      "Read(//tmp/**)",
+      "Bash(/bashes)",
+      "Bash(for i in {1..10})",
+      "Bash(do echo:*)",
+      "Bash(git checkout:*)",
+      "Bash(open:*)",
+      "Bash(docker:*)",
+      "WebFetch(domain:labcastarr-api.oliverbarreto.com)",
+      "WebFetch(domain:podba.se)",
+      "WebFetch(domain:www.castfeedvalidator.com)",
+      "Bash(xxd:*)",
+      "Bash(for:*)",
+      "Bash(ffmpeg:*)",
+      "WebFetch(domain:labcastarr.oliverbarreto.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/session-logger.sh:*)",
+      "Bash(/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/test-hook.sh:*)",
+      "Read(//Users/oliver/.claude/projects/-Users-oliver-Library-Mobile-Documents-com-apple-CloudDocs-dev-webaps-labcastarr/**)",
+      "Bash(lsof:*)",
+      "Bash(/dev/null)",
+      "Bash(openssl rand:*)",
+      "Bash(tee:*)",
+      "Bash(uv tree:*)",
+      "Bash(kill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/session-logger.sh\" UserPromptSubmit"
+          },
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/test-hook.sh\" UserPromptSubmit"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/session-logger.sh\" PostToolUse"
+          },
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/test-hook.sh\" PostToolUse"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/session-logger.sh\" SessionEnd"
+          },
+          {
+            "type": "command",
+            "command": "\"/Users/oliver/Library/Mobile Documents/com~apple~CloudDocs/dev/webaps/labcastarr/scripts/test-hook.sh\" SessionEnd"
+          }
+        ]
+      }
+    ]
+  }
+}
